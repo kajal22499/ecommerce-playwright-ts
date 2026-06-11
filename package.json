@@ -1,0 +1,23 @@
+{
+  "name": "ecommerce-playwright-ts",
+  "version": "1.0.0",
+  "description": "End-to-end test automation suite using Playwright + TypeScript",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kajal22499/ecommerce-playwright-ts.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kajal22499/ecommerce-playwright-ts/issues"
+  },
+  "homepage": "https://github.com/kajal22499/ecommerce-playwright-ts#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.60.0",
+    "@types/node": "^25.9.1",
+    "typescript": "^6.0.3"
+  }
+}
