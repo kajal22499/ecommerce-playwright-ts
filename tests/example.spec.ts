@@ -1,18 +1,53 @@
-import { test, expect } from '@playwright/test';
+const { test, expect } = require("@playwright/test");
 
-test('has title', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
+test('login page automation',async({browser}) =>
+{
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    const firstName = page.locator('#firstName');
+    const lastName = page.locator('#lastName');
+    const userEmail = page.locator('#userEmail');
+    const userMobile = page.locator('#userMobile');
+    const occupation = page.locator('[formcontrolname="occupation"]');
+    const userPassword = page.locator('#userPassword');
+    const confirmPassword = page.locator('#confirmPassword');
+    const login = page.locator('#login'); 
 
-  // Expect a title "to contain" a substring.
-  await expect(page).toHaveTitle(/Playwright/);
+
+    await page.goto("https://rahulshettyacademy.com/client/#/auth/register");
+    console.log(await page.title());
+
+    await firstName.fill("kajal");
+    await lastName.fill("bhosle");
+    await userEmail.fill("kajal2023@gmail.com");
+    await userMobile.fill("8888888888");
+    await occupation.selectOption("Doctor");
+    await userPassword.fill("Learning@23");
+    await confirmPassword.fill("Learning@23");
+    await page.click('#login');
+
+
 });
+test.only('login page',async({browser}) =>
+{
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    const userEmail = page.locator('#userEmail');
+    const userPassword = page.locator('#userPassword');
+    const login = page.locator('#login'); 
 
-test('get started link', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
 
-  // Click the get started link.
-  await page.getByRole('link', { name: 'Get started' }).click();
+    await page.goto("https://rahulshettyacademy.com/client/#/auth/login");
+    console.log(await page.title());
 
-  // Expects page to have a heading with the name of Installation.
-  await expect(page.getByRole('heading', { name: 'Installation' })).toBeVisible();
+    await userEmail.fill("kajal2023@gmail.com");
+    await userPassword.fill("Learning@23");
+    await page.click('#login');
+
+    //await page.waitForLoadState('networkidle'); works sometime
+    await page.locator('.card-body b').first().waitFor(); //--- waitfor wont work if dont define for which item ur waiting 
+    const title = await page.locator('.card-body b').allTextContents();
+    console.log(title);
+
+
 });
