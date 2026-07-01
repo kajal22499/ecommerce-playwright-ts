@@ -23,13 +23,13 @@ test('login page',async({browser}) =>
 
 
 });
-test.only('ui controls',async ({page})=>
+test('ui controls',async ({page})=>
 {
     await page.goto("https://rahulshettyacademy.com/loginpagePractise");
     const userName = page.locator('#username').inputValue();
     const signIn = page.locator('#signInBtn');
     const dropdown = page.locator("select.form-control");
-    const doucmentLink = page.locator("[href*='documents-request']");
+    const documentLink = page.locator("[href*='documents-request']");
     await dropdown.selectOption("consult");
     await page.locator('.radiotextsty').last().click();
     await page.locator('#okayBtn').click();
@@ -39,9 +39,39 @@ test.only('ui controls',async ({page})=>
     await expect(page.locator('#terms')).toBeChecked();
     await page.locator('#terms').uncheck();
     expect(await page.locator('#terms').isChecked()).toBeFalsy();
-    await expect(doucmentLink).toHaveAttribute("class","blinkingText");
+    await expect(documentLink).toHaveAttribute("class","blinkingText");
 
 
     
 });
+test.only('child window handler', async ({ browser }) => {
+    // Step 1 — Create an isolated browser context
+    const context = await browser.newContext();
+    
+    // Step 2 — Open a new page inside that context
+    const page = await context.newPage();
+    
+    // Step 3 — Navigate to the page
+    await page.goto("https://rahulshettyacademy.com/loginpagePractise");
+    
+    // Step 4 — Locate the link that opens a new tab
+    const documentLink = page.locator("[href*='documents-request']");
+
+    // Step 5 — Capture the new page BEFORE clicking
+    const [newPage] = await Promise.all([
+        context.waitForEvent('page'),  // listens for new tab
+        documentLink.click(),          // triggers the new tab
+    ]);
+
+    // Step 6 — Wait for new page to load, then read content
+    const text = await newPage.locator('.red').textContent();
+    const arrayText = text.split("@");
+    const domain = arrayText[1].split(" ")[0]
+    console.log(domain);
+    await page.locator('#username').fill(domain);
+    await page.pause();
+    console.log(await page.locator("#username").inputValue());
+    
+});
+
 
