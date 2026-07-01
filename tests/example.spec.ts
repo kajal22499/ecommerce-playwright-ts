@@ -4,6 +4,8 @@ test('login page',async({browser}) =>
 {
     const context = await browser.newContext();
     const page = await context.newPage();
+    const products = page.locator('.card-body');
+    const productName = 'ZARA COAT 3'; 
     const userEmail = page.locator('#userEmail');
     const userPassword = page.locator('#userPassword');
     const login = page.locator('#login'); 
@@ -20,6 +22,16 @@ test('login page',async({browser}) =>
     await page.locator('.card-body b').first().waitFor(); //--- waitfor wont work if dont define for which item ur waiting 
     const title = await page.locator('.card-body b').allTextContents();
     console.log(title);
+
+   const count = await products.count();
+   for(let i=0;i<count;++i)
+   {
+    if (await products.nth(i).locator("b").textContent()=== 'productName')
+    {
+        await products.nth(i).locator(" Add To Cart").click();
+        break;
+    }
+   }
 
 
 });
@@ -71,7 +83,7 @@ test.only('child window handler', async ({ browser }) => {
     await page.locator('#username').fill(domain);
     await page.pause();
     console.log(await page.locator("#username").inputValue());
-    
+
 });
 
 
