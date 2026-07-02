@@ -1,6 +1,6 @@
 const { test, expect } = require("@playwright/test");
 
-test('login page',async({browser}) =>
+test.only('login page',async({browser}) =>
 {
     const context = await browser.newContext();
     const page = await context.newPage();
@@ -18,7 +18,7 @@ test('login page',async({browser}) =>
     await userPassword.fill("Learning@23");
     await page.click('#login');
 
-    //await page.waitForLoadState('networkidle'); works sometime
+    await page.waitForLoadState('networkidle'); //works sometime
     await page.locator('.card-body b').first().waitFor(); //--- waitfor wont work if dont define for which item ur waiting 
     const title = await page.locator('.card-body b').allTextContents();
     console.log(title);
@@ -26,13 +26,31 @@ test('login page',async({browser}) =>
    const count = await products.count();
    for(let i=0;i<count;++i)
    {
-    if (await products.nth(i).locator("b").textContent()=== 'productName')
+    if (await products.nth(i).locator("b").textContent()=== productName)
     {
-        await products.nth(i).locator(" Add To Cart").click();
+        await products.nth(i).locator("text =  Add To Cart").click();
         break;
     }
    }
-
+    await page.locator("[routerLink*= 'cart']").click();
+    await page.locator("div li").first().waitFor();
+    const bool =  await page.locator("h3:has-text('ZARA COAT 3')").isVisible(); //this isVisible will check if the zara coat 3 is present in cart or not
+    expect(bool).toBeTruthy();
+    await page.locator("text = Checkout").click();
+    await page.locator("[placeholder*= 'Country']").pressSequentially("ind",{delay:100});
+    const dropdown = await page.locator(".ta-results");
+    await dropdown.waitFor();
+    const optionCount = await dropdown.locator("button").count();
+    for(let i =0;i<optionCount;++i)
+    {
+        const text =dropdown.locator("button").nth(i).textContent();
+        if(text == "INDIA")
+        {
+         await dropdown.locator("button").nth(i).click();
+         break;
+        }
+    }
+   await page.pause();
 
 });
 test('ui controls',async ({page})=>
@@ -56,7 +74,7 @@ test('ui controls',async ({page})=>
 
     
 });
-test.only('child window handler', async ({ browser }) => {
+test('child window handler', async ({ browser }) => {
     // Step 1 — Create an isolated browser context
     const context = await browser.newContext();
     
