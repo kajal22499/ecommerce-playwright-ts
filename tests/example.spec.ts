@@ -1,6 +1,6 @@
 const { test, expect } = require("@playwright/test");
 
-test.only('login page',async({browser}) =>
+test('login page',async({browser}) =>
 {
     const context = await browser.newContext();
     const page = await context.newPage();
@@ -108,5 +108,19 @@ test('child window handler', async ({ browser }) => {
     console.log(await page.locator("#username").inputValue());
 
 });
+
+test.only('special locatorss',async ({page})=>
+{
+    await page.goto("https://rahulshettyacademy.com/angularpractice/");
+    await page.getByLabel("Check me out if you Love IceCreams!").click();
+    await page.getByLabel("Student").check();
+    await page.getByLabel("Gender").selectOption("Female");
+    await page.getByPlaceholder('Password').fill('abc236');
+    await page.getByRole('button',{name : 'submit'}).click();
+    await expect(page.getByText('Success! The Form has been submitted successfully!.')).toBeVisible();
+    await page.getByRole('link',{name:'Shop'}).click();
+    await page.locator("app-card").filter({hasText:"Nokia Edge"}).getByRole("button").click();
+});
+
 
 
