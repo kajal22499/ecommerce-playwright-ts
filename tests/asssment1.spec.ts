@@ -1,6 +1,6 @@
 const {test , expect} = require('@playwright/test');
 
-test.only('booking form', async({page})=>
+test('booking form', async({page})=>
 {
     const eventTitle = `Test Event ${Date.now()}`;
     const futureDateValue = '2027-01-15T10:00';

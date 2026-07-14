@@ -40,7 +40,7 @@ test('task 1',async ({page})=>
 
 
 });
-test.only('task 2',async({page})=>
+test('task 2',async({page})=>
     {
       await loginAndGoToBooking(page);
       const bookableEvent = page.locator('[data-testid="book-now-btn"]').filter({hasNotText:'Sold Out'}).nth(1);
