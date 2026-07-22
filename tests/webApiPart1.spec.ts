@@ -1,7 +1,10 @@
 const{test,expect,request}=require('@playwright/test');
 
 const apiPayload = {userEmail: "kajal2023@gmail.com", userPassword: "Learning@23"};
+const orderPayload = {orders: [{country: "India", productOrderedId: "6960eae1c941646b7a8b3ed3"}]}
+
 let token;
+const orderId;
 
 
 test.beforeAll(async()=>
@@ -16,6 +19,17 @@ test.beforeAll(async()=>
    const apiResponseJson = await ApiResponse.json();
     token =  apiResponseJson.token;
    console.log(token);
+
+  const orderResponse =  await apiContext.post("https://rahulshettyacademy.com/api/ecom/order/create-order",
+    {
+      data : orderPayload,
+      Headers:{
+              'authorization': token,
+              'Content-type':'application/json'
+             },
+    })
+    const orderResponseJson = await orderResponse.json();
+    orderId = orderResponseJson.orders[0]
 
 });
 test.beforeEach(()=>
@@ -33,49 +47,9 @@ test('login page',async ({page}) =>
 
     },token);
 
-    await page.goto("https://rahulshettyacademy.com/client");
-    const products = page.locator('.card-body');
-    const productName = 'ZARA COAT 3'; 
-    const emailSeller = 'kajal2023@gmail.com';
-    const userEmail = page.locator('#userEmail');
-    const userPassword = page.locator('#userPassword');
-    const login = page.locator('#login'); 
-    await page.locator('.card-body b').first().waitFor(); //--- waitfor wont work if dont define for which item ur waiting 
-    const title = await page.locator('.card-body b').allTextContents();
-    console.log(title);
-
-   const count = await products.count();
-   for(let i=0;i<count;++i)
-   {
-    if (await products.nth(i).locator("b").textContent()===productName)
-    {
-        await products.nth(i).locator("text =  Add To Cart").click();
-        break;
-    }
-   }
-    await page.locator("[routerLink*='cart']").click();
-    await page.locator("div li").first().waitFor();
-    const bool =  await page.locator("h3:has-text('ZARA COAT 3')").isVisible(); //this isVisible will check if the zara coat 3 is present in cart or not
-    expect(bool).toBeTruthy();
-    await page.getByRole('button',{name :'Checkout'}).click();
-    await page.locator("[placeholder*='Country']").pressSequentially("ind",{delay:100});
-    const dropdown = await page.locator(".ta-results");
-    await dropdown.waitFor();
-    const optionCount = await dropdown.locator("button").count();
-    for(let i =0;i<optionCount;++i)
-    {
-        const text = await dropdown.locator("button").nth(i).textContent();
-        if(text == "INDIA")
-        {
-         await dropdown.locator("button").nth(i).click();
-         break;
-        }
-    }
-    await expect(page.locator(".user__name [type='text']").first()).toHaveText(emailSeller);
-    await page.locator(".action__submit").click();
-    await expect(page.locator(".hero-primary")).toHaveText(" Thankyou for the order. ");
-    const orderID = await page.locator(".em-spacer-1 .ng-star-inserted").textContent();
-    console.log("orderID");
+    await page.goto("https://rahulshettyacademy.com/client/");
+   
+   
 
 });
 test('ui controls',async ({page})=>
