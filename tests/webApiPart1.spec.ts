@@ -138,7 +138,7 @@ test('special locatorss',async ({page})=>
     await page.getByRole('button',{name : 'submit'}).click();
     await expect(page.getByText('Success! The Form has been submitted successfully!.')).toBeVisible();
     await page.getByRole('link',{name:'Shop'}).click();
-    await page.locator("app-card").filter({hasText:"Nokia Edge"}).getByRole("button").click();
+    await page.locator("app-card").filter({hasText:"Nokia Edge"}).getByRoled("button").click();
 });
 
 
